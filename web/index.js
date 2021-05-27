@@ -37,10 +37,10 @@ function setMessage(msg){
 }
 
 function scan(){
-	var selectedIndex = document.getElementById("HostScanType").selectedIndex;
-	hostScanType = document.getElementById("HostScanType").item(selectedIndex).value;
-	var selectedIndex = document.getElementById("PortScanType").selectedIndex;
-	PortScanType = document.getElementById("PortScanType").item(selectedIndex).value;
+	// var selectedIndex = document.getElementById("HostScanType").selectedIndex;
+	// hostScanType = document.getElementById("HostScanType").item(selectedIndex).value;
+	// var selectedIndex = document.getElementById("PortScanType").selectedIndex;
+	// PortScanType = document.getElementById("PortScanType").item(selectedIndex).value;
 	
 	if (base_ip.match(ipformat)){
 		portScan()

@@ -18,17 +18,17 @@ def performPortScan(ips, scan_type = "TCP_SYN", t_ports = [80,21,22], dst_timeou
 		closed_ports = []
 		open_filtered_ports = []
 		for dst_port in t_ports:
-#			if scan_type == 'TCP_SYN': result = ps.tcp_connect_scan(dst_ip,dst_port,dst_timeout)
-#			elif scan_type == 'TCP_SYN_S': result = ps.stealth_scan(dst_ip,dst_port,dst_timeout)
-#			elif scan_type == 'XMAS': result = ps.xmas_scan(dst_ip,dst_port,dst_timeout)
-#			elif scan_type == 'FIN': result = ps.fin_scan(dst_ip,dst_port,dst_timeout)
-#			elif scan_type == 'NULL': result = ps.null_scan(dst_ip,dst_port,dst_timeout)
-#			elif scan_type == 'WINDOW': result = ps.window_scan(dst_ip,dst_port,dst_timeout)
-#			elif scan_type == 'UDP': result = ps.udp_scan(dst_ip,dst_port,dst_timeout)
-			if (dst_port % 3) : 
-				result = 'Open'
-			elif(dst_port % 2):
-				result = "Closed"
+			if scan_type == 'TCP_SYN': result = ps.tcp_connect_scan(dst_ip,dst_port,dst_timeout)
+			elif scan_type == 'TCP_SYN_S': result = ps.stealth_scan(dst_ip,dst_port,dst_timeout)
+			elif scan_type == 'XMAS': result = ps.xmas_scan(dst_ip,dst_port,dst_timeout)
+			elif scan_type == 'FIN': result = ps.fin_scan(dst_ip,dst_port,dst_timeout)
+			elif scan_type == 'NULL': result = ps.null_scan(dst_ip,dst_port,dst_timeout)
+			elif scan_type == 'WINDOW': result = ps.window_scan(dst_ip,dst_port,dst_timeout)
+			elif scan_type == 'UDP': result = ps.udp_scan(dst_ip,dst_port,dst_timeout)
+#			if (dst_port % 3) : 
+#				result = 'Open'
+#			elif(dst_port % 2):
+#				result = "Closed"
 			
 			if result == "Closed":
 				closed_ports.append(dst_port)
@@ -38,8 +38,8 @@ def performPortScan(ips, scan_type = "TCP_SYN", t_ports = [80,21,22], dst_timeou
 				filtered_ports.append(dst_port)
 			elif result == "Open|Filtered":
 				open_filtered_ports.append(dst_port)
-		#OS = OS_scan(dst_ip)
-		OS = "Windows"
+		OS = OS_scan(dst_ip)
+#		OS = "Windows"
 		ports["Open"] = open_ports
 		ports["Closed"] = closed_ports
 		ports["Filtered"] = filtered_ports
@@ -67,16 +67,16 @@ def performHostDiscovery(target_net,scan_type = 'ECHO',dst_timeout = 5):
 
 	hosts = list(ipaddress.ip_network(target_net))
 	for dst_ip in hosts:
-#		if scan_type == 'TCP_SYN':
-#			result = hd.tcp_syn_ping(dst_ip,dst_timeout,dst_port=80)
-#		elif scan_type == 'TCP_ACK':
-#			result = hd.tcp_ack_ping(dst_ip,dst_timeout,dst_port=80)
-#		elif scan_type == 'ECHO':
-#			result = hd.send_icmp(dst_ip,icmp_type = 8 )
-#		elif scan_type == 'TIME_STAMP':
-#			result = hd.send_icmp(dst_ip,icmp_type = 13 )
+		if scan_type == 'TCP_SYN':
+			result = hd.tcp_syn_ping(dst_ip,dst_timeout,dst_port=80)
+		elif scan_type == 'TCP_ACK':
+			result = hd.tcp_ack_ping(dst_ip,dst_timeout,dst_port=80)
+		elif scan_type == 'ECHO':
+			result = hd.send_icmp(dst_ip,icmp_type = 8 )
+		elif scan_type == 'TIME_STAMP':
+			result = hd.send_icmp(dst_ip,icmp_type = 13 )
 
-		result = 'Active'		
+#		result = 'Active'		
 
 		if result == 'Active':
 			activeHost[str(dst_ip)] = {"ports":{},"OS":""}
