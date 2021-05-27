@@ -1,0 +1,89 @@
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<script type="text/javascript" src="./eel.js"></script>
+<script type="text/javascript" src="./index.js"></script>
+
+</head>
+<body>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-8">
+			<form>
+				<div class="form-group">
+					<label for="targetAdd">Hostip/ network ip:</label>
+					<input type="text" class="form-control" id="targetAdd" onkeyup="checkip()" aria-describedby="targetHelp" placeholder="Enter target network range or host ip">
+					<small id="targetHelp" class="form-text text-muted"></small>
+				</div>
+				<div class="form-row">
+				<div class="form-group col-md-4">
+					<label for="HostScanType">Host Scan Type</label>
+					<select id="HostScanType" class="form-control" disabled>
+						<option value="ECHO">Ping</option>
+						<option value="TIME_STAMP">Time Request</option>
+						<option value="TCP_SYN">TCP syn</option>
+						<option value="TCP_ACK">TCP ack</option>
+					</select>
+					<small id="targetHelp" class="form-text text-muted">Some inst</small>
+				</div>	
+				<div class="form-group col-md-4">
+					<label for="PortScanType">Port Scan Types</label>
+					<select id="PortScanType" class="form-control" disabled>
+						  <option value="TCP_SYN">TCP syn</option>
+						  <option value="TCP_SYN_S">Tcp sny (stealth)</option>
+						  <option value="XMAS">Xmas</option>
+						  <option value="FIN">Fin</option>
+						  <option value="NULL">NULL</option>
+						  <option value="UDP">UDP</option> 
+					</select>
+				</div>
+				<div class="col-md-2 ">
+				</div>
+				<div class="d-flex col-md-2 align-items-end">
+				<button id="scanbtn" type="button" onclick="scan()" class="btn btn-primary " disabled>Scan</button>
+				</div>
+				</div>
+			</form>
+			<div>
+				<table class="table table-hover" id="resultTable">
+				<thead 	class="thead-dark">
+					  <th scope="col">Host ip</th>
+					  <th scope="col">OS</th>
+					  <th scope="col">Open Ports</th>
+					  <th scope="col">Closed Ports</th>
+				</thead>
+				</table>
+			</div>	
+		</div>
+		<div class="col-sm-4">
+			<div class="card " id="detail_card" style="visibility: hidden;">
+				<div class="card-header">
+					Host Details
+				</div>
+				<center><img src="./images/unknown.png" id="detail_os_icon" class="rounded" width="50%" alt="..."></center>
+				<div class="card-body">	
+					<h5 class="card-title" id="detail_host_ip">192.168.0.1</h5>
+					<h6 class="card-subtitle text-muted" id="detail_net" disabled>192.168.0.0/24</h6>
+					
+					<label for="detail_os">OS</label>
+					<input type="text"  class="form-control-plaintext" id="detail_os" readonly>
+					<label>Ports</label>
+					<label for="detail_open_ports">Open</label>
+						<textarea class="form-control-plaintext" id="detail_open_ports" rows="1" readonly> </textarea> 
+					<label for="detail_closed_ports">Closed</label>
+						<textarea class="form-control-plaintext" id="detail_closed_ports" rows="1" readonly> </textarea>
+					<label for="detail_filtered_ports">filtered</label>
+						<textarea class="form-control-plaintext" id="detail_filtered_ports" rows="1" readonly> </textarea>
+					<label for="detail_open_filtered_ports">Open/Filtered</label>
+						<textarea class="form-control-plaintext" id="detail_open_filtered_ports" rows="1" readonly> </textarea>
+					
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+</body>
+</html>
