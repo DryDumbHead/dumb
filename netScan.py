@@ -73,13 +73,13 @@ def performHostDiscovery(target_net,scan_type = 'ECHO',dst_timeout = 5):
 	for i in range(len(threads)):
 		if scan_type == 'ECHO':
 			threads[i] = Thread(target=hd.send_icmp,args=(hosts[i], results, i,8))
-		elif scan_type == 'TIME_STAMP':
+		if scan_type == 'TIME_STAMP':
 			threads[i] = Thread(target=hd.send_icmp,args=(hosts[i], results, i,13))
-		# elif scan_type == 'TCP_SYN':
-		# 	# threads[i] = Thread(target=hd.tcp_syn_ping, args=(hosts[i], results,i,dst_timeout,dst_port=80))
-		# 	threads[i] = Thread(target=hd.send_icmp,args=(hosts[i], results, i,13))
-		# elif scan_type == 'TCP_ACK':
-		# 	threads[i] = Thread(target=hd.tcp_ack_ping,args=(hosts[i], results,i,dst_timeout,dst_port=80))
+		#if scan_type == 'TCP_SYN':
+			#threads[i] = Thread(target=hd.tcp_syn_ping, args=(hosts[i], results,i,dst_timeout,dst_port=80))
+		#if scan_type == 'TCP_ACK':
+			#threads[i] = Thread(target=hd.tcp_ack_ping, args=(hosts[i], results,i,dst_timeout,dst_port=80))
+		
 		if scan_type != 'ARP':
 			threads[i].start()
 
