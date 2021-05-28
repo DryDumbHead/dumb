@@ -2,7 +2,7 @@ from scapy.all import *
 def tcp_connect_scan(dst_ip,dst_port,dst_timeout):
 	src_port = RandShort()
 	tcp_connect_scan_resp = sr1(IP(dst=dst_ip)/TCP(sport=src_port,dport=dst_port,flags="S"),timeout=dst_timeout)
-	if(str(type(tcp_connect_scan_resp))=="<type 'NoneType'>"):
+	if(str(type(tcp_connect_scan_resp))=="<class 'NoneType'>"):
 		return "Closed"
 	elif(tcp_connect_scan_resp.haslayer(TCP)):
 		if(tcp_connect_scan_resp.getlayer(TCP).flags == 0x12):
@@ -17,7 +17,7 @@ def tcp_connect_scan(dst_ip,dst_port,dst_timeout):
 def stealth_scan(dst_ip,dst_port,dst_timeout):
 	src_port = RandShort()
 	stealth_scan_resp = sr1(IP(dst=dst_ip)/TCP(sport=src_port,dport=dst_port,flags="S"),timeout=dst_timeout)
-	if(str(type(stealth_scan_resp))=="<type 'NoneType'>"):
+	if(str(type(stealth_scan_resp))=="<class 'NoneType'>"):
 		return "Filtered"
 	elif(stealth_scan_resp.haslayer(TCP)):
 		if(stealth_scan_resp.getlayer(TCP).flags == 0x12):
@@ -34,7 +34,7 @@ def stealth_scan(dst_ip,dst_port,dst_timeout):
 
 def xmas_scan(dst_ip,dst_port,dst_timeout):
 	xmas_scan_resp = sr1(IP(dst=dst_ip)/TCP(dport=dst_port,flags="FPU"),timeout=dst_timeout)
-	if (str(type(xmas_scan_resp))=="<type 'NoneType'>"):
+	if (str(type(xmas_scan_resp))=="<class 'NoneType'>"):
 		return "Open|Filtered"
 	elif(xmas_scan_resp.haslayer(TCP)):
 		if(xmas_scan_resp.getlayer(TCP).flags == 0x14):
@@ -48,7 +48,7 @@ def xmas_scan(dst_ip,dst_port,dst_timeout):
 
 def fin_scan(dst_ip,dst_port,dst_timeout):
 	fin_scan_resp = sr1(IP(dst=dst_ip)/TCP(dport=dst_port,flags="F"),timeout=dst_timeout)
-	if (str(type(fin_scan_resp))=="<type 'NoneType'>"):
+	if (str(type(fin_scan_resp))=="<clas 'NoneType'>"):
 		return "Open|Filtered"
 	elif(fin_scan_resp.haslayer(TCP)):
 		if(fin_scan_resp.getlayer(TCP).flags == 0x14):
@@ -62,7 +62,7 @@ def fin_scan(dst_ip,dst_port,dst_timeout):
 
 def null_scan(dst_ip,dst_port,dst_timeout):
 	null_scan_resp = sr1(IP(dst=dst_ip)/TCP(dport=dst_port,flags=""),timeout=dst_timeout)
-	if (str(type(null_scan_resp))=="<type 'NoneType'>"):
+	if (str(type(null_scan_resp))=="<class 'NoneType'>"):
 		return "Open|Filtered"
 	elif(null_scan_resp.haslayer(TCP)):
 		if(null_scan_resp.getlayer(TCP).flags == 0x14):
@@ -76,21 +76,21 @@ def null_scan(dst_ip,dst_port,dst_timeout):
 
 def ack_flag_scan(dst_ip,dst_port,dst_timeout):
 	ack_flag_scan_resp = sr1(IP(dst=dst_ip)/TCP(dport=dst_port,flags="A"),timeout=dst_timeout)
-	if (str(type(ack_flag_scan_resp))=="<type 'NoneType'>"):
-		return "Stateful firewall present\n(Filtered)"
+	if (str(type(ack_flag_scan_resp))=="<class 'NoneType'>"):
+		return "Stateful firewall present\(Filtered)"
 	elif(ack_flag_scan_resp.haslayer(TCP)):
 		if(ack_flag_scan_resp.getlayer(TCP).flags == 0x4):
-			return "No firewall\n(Unfiltered)"
+			return "No firewall\(Unfiltered)"
 	elif(ack_flag_scan_resp.haslayer(ICMP)):
 		if(int(ack_flag_scan_resp.getlayer(ICMP).type)==3 and int(ack_flag_scan_resp.getlayer(ICMP).code) in [1,2,3,9,10,13]):
-			return "Stateful firewall present\n(Filtered)"
+			return "Stateful firewall present\(Filtered)"
 	else:
 		return "CHECK"
 
 
 def window_scan(dst_ip,dst_port,dst_timeout):
 	window_scan_resp = sr1(IP(dst=dst_ip)/TCP(dport=dst_port,flags="A"),timeout=dst_timeout)
-	if (str(type(window_scan_resp))=="<type 'NoneType'>"):
+	if (str(type(window_scan_resp))=="<class 'NoneType'>"):
 		return "No response"
 	elif(window_scan_resp.haslayer(TCP)):
 		if(window_scan_resp.getlayer(TCP).window == 0):
@@ -103,12 +103,12 @@ def window_scan(dst_ip,dst_port,dst_timeout):
 
 def udp_scan(dst_ip,dst_port,dst_timeout):
 	udp_scan_resp = sr1(IP(dst=dst_ip)/UDP(dport=dst_port),timeout=dst_timeout)
-	if (str(type(udp_scan_resp))=="<type 'NoneType'>"):
+	if (str(type(udp_scan_resp))=="<class 'NoneType'>"):
 		retrans = []
 		for count in range(0,3):
 			retrans.append(sr1(IP(dst=dst_ip)/UDP(dport=dst_port),timeout=dst_timeout))
 		for item in retrans:
-			if (str(type(item))!="<type 'NoneType'>"):
+			if (str(type(item))!="<class 'NoneType'>"):
 				udp_scan(dst_ip,dst_port,dst_timeout)
 		return "Open|Filtered"
 	elif (udp_scan_resp.haslayer(UDP)):

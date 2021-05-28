@@ -1,17 +1,18 @@
 
 var NetworkData = {}
 var base_ip = ""
-var hostScanType = "TCP_SYN"
-var portScanType = ""
-var timeout = 2;
+var hostScanType = "ECHO"
+var portScanType = "TCP_SYN"
+var timeout = 5;
 const ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 const netformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
   
-const commonPorts = [21,22,80,443,3306,14147,2121,8080,8000]
+const commonOpenPorts = [20,21,22,25,53,80,110,143,443,8080,8000]
+const 
 function appendActiveHost(ip){
   activeHosts.push(ip)
   portsToScan = commonPorts;
-  eel.performPortScan([ip],hostScanType,portsToScan, timeout,base_ip)	
+  eel.performPortScan([ip],portScanType,portsToScan, timeout,base_ip)	
 }
 
 function appendPortResult(data){
@@ -55,7 +56,8 @@ function hostScan(){
 }
 
 function triggerportsScan(ips,portsToScan){
-	var ipList = ip;
+	ips = []
+	ips = base_ip.split(",")
 	eel.performPortScan(ipList,hostScanType,portsToScan, timeout,base_ip);
 }
 function portScan(){

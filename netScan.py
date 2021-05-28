@@ -1,6 +1,7 @@
 import eel
 from scapy.all import *
 import ipaddress
+from threading import Thread
 from modules import hostDiscovery as hd ,PortScan as ps
 
 
@@ -66,21 +67,43 @@ def performHostDiscovery(target_net,scan_type = 'ECHO',dst_timeout = 5):
 	activeHost = {}
 
 	hosts = list(ipaddress.ip_network(target_net))
-	for dst_ip in hosts:
-		if scan_type == 'TCP_SYN':
-			result = hd.tcp_syn_ping(dst_ip,dst_timeout,dst_port=80)
-		elif scan_type == 'TCP_ACK':
-			result = hd.tcp_ack_ping(dst_ip,dst_timeout,dst_port=80)
-		elif scan_type == 'ECHO':
-			result = hd.send_icmp(dst_ip,icmp_type = 8 )
+
+	threads = [None] * len(hosts)
+	results = [None] * len(hosts)
+	for i in range(len(threads)):
+		if scan_type == 'ECHO':
+			threads[i] = Thread(target=hd.send_icmp,args=(hosts[i], results, i,8))
 		elif scan_type == 'TIME_STAMP':
-			result = hd.send_icmp(dst_ip,icmp_type = 13 )
+			threads[i] = Thread(target=hd.send_icmp,args=(hosts[i], results, i,13))
+		# elif scan_type == 'TCP_SYN':
+		# 	# threads[i] = Thread(target=hd.tcp_syn_ping, args=(hosts[i], results,i,dst_timeout,dst_port=80))
+		# 	threads[i] = Thread(target=hd.send_icmp,args=(hosts[i], results, i,13))
+		# elif scan_type == 'TCP_ACK':
+		# 	threads[i] = Thread(target=hd.tcp_ack_ping,args=(hosts[i], results,i,dst_timeout,dst_port=80))
+		if scan_type != 'ARP':
+			threads[i].start()
+
+	if scan_type != 'ARP':
+		for i in range(len(threads)):
+			threads[i].join()
+	# elif scan_type == 'ARP':
+	# 	send_arp_req(target_net):
+
+	# for dst_ip in hosts:
+	# 	if scan_type == 'TCP_SYN':
+	# 		result = hd.tcp_syn_ping(dst_ip,dst_timeout,dst_port=80)
+	# 	elif scan_type == 'TCP_ACK':
+	# 		result = hd.tcp_ack_ping(dst_ip,dst_timeout,dst_port=80)
+	# 	elif scan_type == 'ECHO':
+	# 		result = hd.send_icmp(dst_ip,icmp_type = 8 )
+	# 	elif scan_type == 'TIME_STAMP':
+	# 		result = hd.send_icmp(dst_ip,icmp_type = 13 )
 
 #		result = 'Active'		
-
-		if result == 'Active':
-			activeHost[str(dst_ip)] = {"ports":{},"OS":""}
-			addActiveHost(str(dst_ip))
+	hosts_found = [i for i in results if i is not None]
+	for dst_ip in hosts_found:
+		activeHost[str(dst_ip)] = {"ports":{},"OS":""}
+		addActiveHost(str(dst_ip))
 	res['ScanType']	= scan_type
 	res['ActiveHosts'] = activeHost
 	
