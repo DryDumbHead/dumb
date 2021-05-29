@@ -11,7 +11,7 @@ const commonOpenPorts = [20,21,22,25,53,80,110,143,443,8080,8000]
 
 function appendActiveHost(ip){
   activeHosts.push(ip)
-  portsToScan = commonPorts;
+  portsToScan = commonOpenPorts;
   eel.performPortScan([ip],portScanType,portsToScan, timeout,base_ip)	
 }
 
@@ -27,21 +27,23 @@ function appendPortResult(data){
 
 function triggerHostScan(networkIP){
 	activeHosts = []
-	eel.performHostDiscovery(networkIP,'ECHO',3)(function (netData){
+	eel.performHostDiscovery(networkIP,hostScanType,timeout)(function (netData){
 		updateNetwork(netData)
 	})
+
 }
 
 
 function setMessage(msg){
+
 	console.log(msg)
 }
 
 function scan(){
-	// var selectedIndex = document.getElementById("HostScanType").selectedIndex;
-	// hostScanType = document.getElementById("HostScanType").item(selectedIndex).value;
-	// var selectedIndex = document.getElementById("PortScanType").selectedIndex;
-	// PortScanType = document.getElementById("PortScanType").item(selectedIndex).value;
+	 var selectedIndex = document.getElementById("HostScanType").selectedIndex;
+	 hostScanType = document.getElementById("HostScanType").item(selectedIndex).value;
+	 selectedIndex = document.getElementById("PortScanType").selectedIndex;
+	 PortScanType = document.getElementById("PortScanType").item(selectedIndex).value;
 	
 	if (base_ip.match(ipformat)){
 		portScan()
@@ -56,13 +58,18 @@ function hostScan(){
 }
 
 function triggerportsScan(ips,portsToScan){
-	ips = []
-	ips = base_ip.split(",")
-	eel.performPortScan(ipList,hostScanType,portsToScan, timeout,base_ip);
+	ipList = []
+	ipList = ips.split(",")
+	eel.performPortScan(ipList,portScanType,portsToScan, timeout,base_ip);
 }
 function portScan(){
 	ips = document.getElementById('targetAdd').value;
-	portsToScan = commonPorts;
+	if (portScanType != 'UDP'){
+		portsToScan = commonOpenPorts;
+	}else{
+		portsToScan = commonClosedPorts;
+	}
+	
 	triggerportsScan(ips,portsToScan);
 }
 
@@ -92,7 +99,7 @@ function displaytable(Data){
 			tr.innerHTML = "<td>" + ip +"</td>" +
 							"<td>"+ host["OS"] +"</td>";             //{network_ip:{"ActiveHosts":{host_ip:{"OS"}}}}
 			//for (p in host["ports"]){                       //{network_ip:{ActiveHosts:{host_ip:{"ports":{port_status}}}}}
-				var arr = host["ports"]["Open"]; 
+				var arr = host["ports"]["Open"].slice(0,4); 
 				var ports = "";
 				for (i in arr){ 
 					if (ports ===""){
@@ -103,7 +110,7 @@ function displaytable(Data){
 					}
 				} 
 				tr.innerHTML = tr.innerHTML + "<td>" + ports + "</tr>";
-				var arr = host["ports"]["Closed"]; 
+				var arr = host["ports"]["Closed"].slice(0,4); 
 				var ports = "";
 				for (i in arr){ 
 					if (ports ===""){
@@ -162,8 +169,8 @@ function displayHostDetail(net,ip){
 	}
 
 	for (p in closed_ports){
-		if (detail_closed_ports.valuet == "")
-			detail_closed_ports.valuet =  closed_ports[p];
+		if (detail_closed_ports.value == "")
+			detail_closed_ports.value =  closed_ports[p];
 		else
 			detail_closed_ports.value = detail_closed_ports.value + "," + closed_ports[p];
 	}
@@ -189,23 +196,50 @@ function checkip(){
   
   if (base_ip.match(ipformat)|| base_ip.match(netformat)){
 	if ( base_ip.match(ipformat)){
-		document.getElementById("HostScanType").disabled=true;
+		//document.getElementById("HostScanType").disabled=true;
+		disable_enable_form_elements("HostScanType",enable_disable=true);
 		document.getElementById("targetHelp").innerText= "You entered an host IP, only Port Scan will be performed";
 	}
 	else if(base_ip.match(netformat)){
-		document.getElementById("HostScanType").disabled=false;
+		disable_enable_form_elements("HostScanType",enable_disable=false);
+		//document.getElementById("HostScanType").disabled=false;
 		document.getElementById("targetHelp").innerText= "You entered an network IP, Host Discovery &  Port Scan will be performed";
 	}
-	document.getElementById("PortScanType").disabled=false;
-	document.getElementById("scanbtn").disabled=false;
+	disable_enable_form_elements("PortScanType",enable_disable=false);
+	disable_enable_form_elements("scanbtn",enable_disable=false);
+	// document.getElementById("PortScanType").disabled=false;
+	// document.getElementById("scanbtn").disabled=false;
   }
   else{
 	document.getElementById("targetHelp").innerText= "Invalid IP Address";
-	document.getElementById("PortScanType").disabled=true;
-	document.getElementById("scanbtn").disabled=true;
-	document.getElementById("HostScanType").disabled=true;
+	disable_enable_form_elements("PortScanType",enable_disable=true);
+	disable_enable_form_elements("HostScanType",enable_disable=true);
+	disable_enable_form_elements("scanbtn",enable_disable=true);
+	// document.getElementById("PortScanType").disabled=true;
+	// document.getElementById("scanbtn").disabled=true;
+	// document.getElementById("HostScanType").disabled=true;
   }
   
+}
+function initialize(){
+	var ports = "" ;
+	for (prt in commonOpenPorts){
+		if (ports == ""){
+			ports += commonOpenPorts[prt];
+		}else{
+			ports += "," + commonOpenPorts[prt];
+		}
+		
+	}
+	portNos = document.getElementById("portNos").value = ports
+	document.getElementById("targetAdd").value = "192.168.0.1";
+	disable_enable_form_elements("PortScanType",enable_disable=true);
+	disable_enable_form_elements("HostScanType",enable_disable=true);
+	disable_enable_form_elements("scanbtn",enable_disable=true);
+}
+
+function disable_enable_form_elements(elementId,enable_disable=true){
+	document.getElementById(elementId).disabled = enable_disable;
 }
  eel.expose(appendActiveHost);
  eel.expose(setMessage);

@@ -5,17 +5,30 @@
 
 <script type="text/javascript" src="./eel.js"></script>
 <script type="text/javascript" src="./index.js"></script>
-
+<style>
+table {
+  display: block;
+  height: 700px;
+  overflow-y: auto;
+}
+</style>
 </head>
-<body>
+<body onload="initialize()">
 <div class="container">
 	<div class="row">
 		<div class="col-sm-8">
 			<form>
-				<div class="form-group">
-					<label for="targetAdd">Hostip/ network ip:</label>
-					<input type="text" class="form-control" id="targetAdd" onkeyup="checkip()" aria-describedby="targetHelp" placeholder="Enter target network range or host ip">
-					<small id="targetHelp" class="form-text text-muted"></small>
+				<div class="form-row">
+					<div class="form-group col-6">
+						<label for="targetAdd">Hostip/ network ip:</label>
+						<input type="text" class="form-control" id="targetAdd" onkeyup="checkip()" aria-describedby="targetHelp" placeholder="Enter target network range or host ip" required>
+						<small id="targetHelp" class="form-text text-muted"></small>
+					</div>
+					<div class="form-group col-6">
+						<label for="portNos">Port No's:</label>
+						<input type="text" class="form-control" id="portNos" onkeyup="checkports()" aria-describedby="portHelp" placeholder="Comma Separated Port No's " required>
+						<small id="portHelp" class="form-text text-muted"></small>
+					</div>					
 				</div>
 				<div class="form-row">
 				<div class="form-group col-md-4">

@@ -39,6 +39,7 @@ def performPortScan(ips, scan_type = "TCP_SYN", t_ports = [80,21,22], dst_timeou
 				filtered_ports.append(dst_port)
 			elif result == "Open|Filtered":
 				open_filtered_ports.append(dst_port)
+		writeMsg("Port Scan for {} completed: {} Open Ports".format(str(dst_ip),len(open_ports)))
 		OS = OS_scan(dst_ip)
 #		OS = "Windows"
 		ports["Open"] = open_ports
@@ -63,11 +64,13 @@ def performPortScan(ips, scan_type = "TCP_SYN", t_ports = [80,21,22], dst_timeou
 @eel.expose
 def performHostDiscovery(target_net,scan_type = 'ECHO',dst_timeout = 5):
 	
+	if not scan_type in ['ECHO','TIME_STAMP','TCP_SYN','TCP_ACK']:
+		return
 	res ={}
 	activeHost = {}
-
+	
 	hosts = list(ipaddress.ip_network(target_net))
-
+	writeMsg("Host Discovery Started for {}".format(target_net))
 	threads = [None] * len(hosts)
 	results = [None] * len(hosts)
 	for i in range(len(threads)):
@@ -75,10 +78,10 @@ def performHostDiscovery(target_net,scan_type = 'ECHO',dst_timeout = 5):
 			threads[i] = Thread(target=hd.send_icmp,args=(hosts[i], results, i,8))
 		if scan_type == 'TIME_STAMP':
 			threads[i] = Thread(target=hd.send_icmp,args=(hosts[i], results, i,13))
-		#if scan_type == 'TCP_SYN':
-			#threads[i] = Thread(target=hd.tcp_syn_ping, args=(hosts[i], results,i,dst_timeout,dst_port=80))
-		#if scan_type == 'TCP_ACK':
-			#threads[i] = Thread(target=hd.tcp_ack_ping, args=(hosts[i], results,i,dst_timeout,dst_port=80))
+		if scan_type == 'TCP_SYN':
+			threads[i] = Thread(target = hd.tcp_syn_ping, args=(hosts[i], results,i, dst_timeout, 80) )
+		if scan_type == 'TCP_ACK':
+			threads[i] = Thread(target=hd.tcp_ack_ping, args=(hosts[i], results,i,dst_timeout,80))
 		
 		if scan_type != 'ARP':
 			threads[i].start()
@@ -100,7 +103,9 @@ def performHostDiscovery(target_net,scan_type = 'ECHO',dst_timeout = 5):
 	# 		result = hd.send_icmp(dst_ip,icmp_type = 13 )
 
 #		result = 'Active'		
+	
 	hosts_found = [i for i in results if i is not None]
+	writeMsg("||Host Discovery Finished for {}|| {} hosts identified".format(target_net,len(hosts_found)))
 	for dst_ip in hosts_found:
 		activeHost[str(dst_ip)] = {"ports":{},"OS":""}
 		addActiveHost(str(dst_ip))
@@ -108,7 +113,6 @@ def performHostDiscovery(target_net,scan_type = 'ECHO',dst_timeout = 5):
 	res['ActiveHosts'] = activeHost
 	
 	NetworkHosts[str(target_net)]= res
-	writeMsg("||Host Discovery Finished||")
 	return NetworkHosts
 	
 	

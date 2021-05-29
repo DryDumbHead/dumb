@@ -27,8 +27,6 @@
 					},
 					"OS": "Windows NT"
 				},
-			
-			
 				"192.168.0.3": {
 					"ports": {
 						"open": [80, 40, 21],
@@ -37,7 +35,71 @@
 						"filtered": [87, 90]
 					},
 					"OS": "Windows NT"
-				}
+				},
+				"192.168.0.4": {
+					"ports": {
+						"open": [80, 40, 21],
+						"closed": [22, 89],
+						"open/filtered": [45],
+						"filtered": [87, 90]
+					},
+					"OS": "Windows NT"
+				},
+				"192.168.0.5": {
+					"ports": {
+						"open": [80, 40, 21],
+						"closed": [22, 89],
+						"open/filtered": [45],
+						"filtered": [87, 90]
+					},
+					"OS": "Windows NT"
+				},
+				"192.168.0.6": {
+					"ports": {
+						"open": [80, 40, 21],
+						"closed": [22, 89],
+						"open/filtered": [45],
+						"filtered": [87, 90]
+					},
+					"OS": "Windows NT"
+				},
+				"192.168.0.7": {
+					"ports": {
+						"open": [80, 40,80, 40, 21],
+						"closed": [22, 89],
+						"open/filtered": [45],
+						"filtered": [87, 90]
+					},
+					"OS": "Windows NT"
+				},
+			
+				"192.168.0.8": {
+					"ports": {
+						"open": [80, 40, 21],
+						"closed": [22, 89],
+						"open/filtered": [45],
+						"filtered": [87, 90]
+					},
+					"OS": "Windows NT"
+				},
+				"192.168.0.9": {
+					"ports": {
+						"open": [80, 40, 21],
+						"closed": [22, 89],
+						"open/filtered": [45],
+						"filtered": [87, 90]
+					},
+					"OS": "Windows NT"
+				},
+				"192.168.0.10": {
+					"ports": {
+						"open": [80, 40, 21],
+						"closed": [22, 89],
+						"open/filtered": [45],
+						"filtered": [87, 90]
+					},
+					"OS": "Windows NT"
+				},
 			
 		}
 	}
@@ -64,7 +126,7 @@ function displaytable(){
 			tr.innerHTML = "<td>" + ip +"</td>" +
 							"<td>"+ host["OS"] +"</td>";
 			//for (p in host["ports"]){ 
-				var arr = host["ports"]["open"]; 
+				var arr = host["ports"]["open"].slice(0,3); 
 				var ports = "";
 				for (i in arr){ 
 					if (ports ===""){
@@ -75,7 +137,7 @@ function displaytable(){
 					}
 				} 
 				tr.innerHTML = tr.innerHTML + "<td>" + ports + "</tr>";
-				var arr = host["ports"]["closed"]; 
+				var arr = host["ports"]["closed"].slice(0,3); 
 				var ports = "";
 				for (i in arr){ 
 					if (ports ===""){
@@ -155,14 +217,17 @@ function displayHostDetail(net,ip){
 </script>		
 
 <style>
-.selector-for-some-widget {
-  box-sizing: content-box;
-};
+
+table {
+  display: block;
+  height: 700px;
+  overflow-y: scroll;
+}
 
 </style>
 </head>
 <body onload="displaytable()">
-<div class="container">
+<div class="container" height = "200px">
 	<div class="row">
 		<div class="col-sm-8">
 			<form>
@@ -201,7 +266,7 @@ function displayHostDetail(net,ip){
 				</div>
 			</form>
 			<div>
-				<table class="table table-hover" id="display">
+				<table class="table table-hover" id="display" height = "20%">
 				<thead 	class="thead-dark">
 					  <th scope="col">Host ip</th>
 					  <th scope="col">OS</th>
