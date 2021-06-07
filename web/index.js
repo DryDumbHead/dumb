@@ -33,17 +33,20 @@ function triggerHostScan(networkIP){
 
 }
 
-
+function exportdata(){
+	eel.exportNetworkHosts();
+}
 function setMessage(msg){
 
 	console.log(msg)
+	document.getElementById("message-box").innerHTML = msg;
 }
 
 function scan(){
 	 var selectedIndex = document.getElementById("HostScanType").selectedIndex;
 	 hostScanType = document.getElementById("HostScanType").item(selectedIndex).value;
 	 selectedIndex = document.getElementById("PortScanType").selectedIndex;
-	 PortScanType = document.getElementById("PortScanType").item(selectedIndex).value;
+	 portScanType = document.getElementById("PortScanType").item(selectedIndex).value;
 	
 	if (base_ip.match(ipformat)){
 		portScan()
@@ -99,7 +102,7 @@ function displaytable(Data){
 			tr.innerHTML = "<td>" + ip +"</td>" +
 							"<td>"+ host["OS"] +"</td>";             //{network_ip:{"ActiveHosts":{host_ip:{"OS"}}}}
 			//for (p in host["ports"]){                       //{network_ip:{ActiveHosts:{host_ip:{"ports":{port_status}}}}}
-				var arr = host["ports"]["Open"].slice(0,4); 
+				var arr = host["ports"]["Open"]; 
 				var ports = "";
 				for (i in arr){ 
 					if (ports ===""){
@@ -110,7 +113,7 @@ function displaytable(Data){
 					}
 				} 
 				tr.innerHTML = tr.innerHTML + "<td>" + ports + "</tr>";
-				var arr = host["ports"]["Closed"].slice(0,4); 
+				var arr = host["ports"]["Closed"]; 
 				var ports = "";
 				for (i in arr){ 
 					if (ports ===""){
@@ -156,7 +159,7 @@ function displayHostDetail(net,ip){
 	detail_filtered_ports.value = "";
 	detail_open_filtered_ports.value = "";
 	
-	detail_os.value = host["OS"];
+	detail_os.innerText = host["OS"];
 	detail_host_ip.innerText = ip;
 	detail_net.innerText = net;
 	

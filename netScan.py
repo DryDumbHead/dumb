@@ -2,6 +2,8 @@ import eel
 from scapy.all import *
 import ipaddress
 from threading import Thread
+from tkinter import filedialog
+import json
 from modules import hostDiscovery as hd ,PortScan as ps
 
 
@@ -117,23 +119,77 @@ def performHostDiscovery(target_net,scan_type = 'ECHO',dst_timeout = 5):
 	
 	
 
+
 def OS_scan(dist_ip ):
 	try:
-		os_ttl = {'Linux/Unix 2.2-2.4 >':255,'Linux/Unix 2.0.x kernel':64,'Windows 98':32,'Windows':128}
+		os_spec = { 'Linux/Unix 2.2-2.4 >':255,
+					'Linux/Unix 2.0.x kernel':64,
+					'Windows 98':32,
+					'Windows':128,
+					'AIX ': 60,
+					'AIX 3.2, 4.1': 255,
+					'BSDI BSD/OS 3.1 and 4.0': 255,
+					'Compa Tru64 v5.0': 64,
+					'Cisco ': 254,
+					'Foundry ': 64,
+					'FreeBSD 3.4, 4.0': 255,
+					'FreeBSD 5': 64,
+					'HP-UX 10.2': 255,
+					'HP-UX 11': 255,
+					'Irix 6.5.3, 6.5.8': 255,
+					'juniper ': 64,
+					'MPE/IX (HP) ': 200,
+					'Linux 2.0.x kernel': 64,
+					'Linux 2.2.14 kernel': 255,
+					'Linux 2.4 kernel': 255,
+					'Linux Red Hat 9': 64,
+					'MacOS/MacTCP X (10.5.6)': 64,
+					'NetBSD ': 255,
+					'Netgear FVG318 ': 64,
+					'OpenBSD 2.6 & 2.7': 255,
+					'OpenVMS 07.01.2002': 255,
+					'Solaris 2.5.1, 2.6, 2.7, 2.8': 255,
+					'Stratus TCP_OS': 255,
+					'Stratus STCP': 60,
+					'SunOS 5.7': 255,
+					'Ultrix V4.2 – 4.5': 255,
+					'Windows 98': 32,
+					'Windows 98, 98 SE': 128,
+					'Windows NT 4 WRKS SP 3, SP 6a': 128,
+					'Windows NT 4 Server SP4': 128,
+					'Windows ME': 128,
+					'Windows 2000 pro': 128,
+					'Windows 2000 family': 128,
+					'Windows XP': 128,
+					'Windows Vista': 128,
+					'Windows 7': 128,
+					'Windows Server 2008': 128,
+					'Windows 10': 128
+				}
 		pkg = IP(dst=dist_ip,ttl=128)/ICMP()
 		
-		ans, _ = sr1(pkg,retry=5,timeout=3,inter=1,verbose=0)
+		ans = sr1(pkg,retry=5,timeout=3,inter=1,verbose=0)
 		
 		try:
-			target_ttl = ans[0][1].ttl
+			target_ttl = ans.ttl
 		except:
 			return "Host did not respond"
-
-		for ttl in os_ttl:
-			if target_ttl == os_ttl[ttl]:
-				return ttl
+		os_str =""
+		for os in os_spec:
+			if target_ttl == os_spec[os] :
+				return os
+				#os_str = os_str + str(os)
+				#print(os_str)
+		#return os_str
 	except:
 		return "Unknown"
+@eel.expose
+def exportNetworkHosts():
+	file_path = filedialog.asksaveasfilename()
+	file = open(file_path,"w")
+	json.dump(NetworkHosts, file)
+	file.close()
+	writeMsg("exported to {}".format(file_path))
 
 def updateScanSummary():
 	eel.updateNetwork(NetworkHosts)

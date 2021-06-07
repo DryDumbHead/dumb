@@ -60,6 +60,7 @@ table {
 				</div>
 			</form>
 			<div>
+				<button id="exportbtn" type="button" onclick="exportdata()" class="btn btn-secondary" >Export</button>
 				<table class="table table-hover" id="resultTable">
 				<thead 	class="thead-dark">
 					  <th scope="col">Host ip</th>
@@ -68,7 +69,11 @@ table {
 					  <th scope="col">Closed Ports</th>
 				</thead>
 				</table>
-			</div>	
+				<div class="alert alert-dark" role="alert" id="message-box">
+				_____________________________________________
+				</div>
+			</div>
+			
 		</div>
 		<div class="col-sm-4">
 			<div class="card " id="detail_card" style="visibility: hidden;">
@@ -81,7 +86,8 @@ table {
 					<h6 class="card-subtitle text-muted" id="detail_net" disabled>192.168.0.0/24</h6>
 					
 					<label for="detail_os">OS</label>
-					<input type="text"  class="form-control-plaintext" id="detail_os" readonly>
+					
+					<textarea class="form-control-plaintext" id="detail_os" rows="1" readonly> </textarea> 
 					<label>Ports</label>
 					<label for="detail_open_ports">Open</label>
 						<textarea class="form-control-plaintext" id="detail_open_ports" rows="1" readonly> </textarea> 
